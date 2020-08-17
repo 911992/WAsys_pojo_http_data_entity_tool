@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2020, https://github.com/911992 All rights reserved.
+License BSD 3-Clause (https://opensource.org/licenses/BSD-3-Clause)
+-->
+
+<!--<![CDATA[
+
+WAsys_pojo_http_data_entity_tool
+File: pom.xml
+Created on: Aug 16, 2020 08:31:21 AM
+    @author https://github.com/911992
+ 
+History:
+    initial version: 0.1.0(20200726)
+
+]]>-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.github.911992</groupId>
+    <artifactId>WAsys_pojo_http_data_entity_tool</artifactId>
+    <version>0.1.0</version>
+    <packaging>jar</packaging>
+    <description>Simple tool for making skeleton of Fillable_Object (and Poolable_Object) (WAsys_pojo_http_data) entities</description>
+    <url>https://github.com/911992/WAsys_pojo_http_data_entity_tool</url>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <licenses>
+        <license>
+            <name>The 3-Clause BSD License</name>
+            <url>https://opensource.org/licenses/BSD-3-Clause</url>
+        </license>
+    </licenses>
+    
+    <developers>
+        <developer>
+            <name>911992</name>
+            <url>https://github.com/911992</url>
+        </developer>
+    </developers>
+    
+    <scm>   
+        <connection>scm:git:git://github.com/911992/WAsys_pojo_http_data_entity_tool.git</connection>   
+        <developerConnection>scm:git:ssh://github.com/911992/WAsys_pojo_http_data_entity_tool.git</developerConnection>   
+        <url>https://github.com/911992/WAsys_pojo_http_data_entity_tool/tree/master</url> 
+    </scm>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+    
+    <build>
+        
+        <resources>
+        <resource>
+            <directory>${basedir}/src/main/resources</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </resource>
+     </resources>
+        
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    
+</project>
