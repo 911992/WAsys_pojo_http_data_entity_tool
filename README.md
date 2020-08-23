@@ -7,7 +7,7 @@ Simple tool for making skeleton of `Fillable_Object` [WAsys_simple_generic_objec
 *diagram 0: social media vector*
 
 ## Revision History
-Latest: v0.1.0 (Jul 26, 2020)  
+Latest: v0.2.1 (Aug 23, 2020)  
 Please refer to [release_note.md](./release_note.md) file  
 
 ## Requirments
@@ -33,7 +33,7 @@ By default it shows the help(`-h`) command, something like following.
 ```
 $ java -jar ./dist/WAsys_pojo_http_data_entity_tool.jar
 Error! zero-length input argument is not expected!
-WAsys Fillable_Object Skeleton Generator v0.1.0(20200726)
+WAsys Fillable_Object Skeleton Generator v0.2.1(20200823)
 https://github.com/911992/WAsys_pojo_http_data_entity_tool
 -----------
 Command Lines:

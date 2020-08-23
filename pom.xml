@@ -12,6 +12,9 @@ Created on: Aug 16, 2020 08:31:21 AM
     @author https://github.com/911992
  
 History:
+    0.2.1 (20200823)
+        • changed artifact to 0.2.1
+        
     initial version: 0.1.0(20200726)
 
 ]]>-->
@@ -19,7 +22,7 @@ History:
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.911992</groupId>
     <artifactId>WAsys_pojo_http_data_entity_tool</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.1</version>
     <packaging>jar</packaging>
     <description>Simple tool for making skeleton of Fillable_Object (and Poolable_Object) (WAsys_pojo_http_data) entities</description>
     <url>https://github.com/911992/WAsys_pojo_http_data_entity_tool</url>
