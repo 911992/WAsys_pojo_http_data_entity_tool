@@ -12,6 +12,10 @@ Created on: Aug 16, 2020 08:31:21 AM
     @author https://github.com/911992
  
 History:
+    0.2.7 (20200829)
+        • Added copyright notice literal for javadoc(plugin)
+        • changed artifact to 0.2.7
+
     0.2.1 (20200823)
         • changed artifact to 0.2.1
         
@@ -22,7 +26,7 @@ History:
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.911992</groupId>
     <artifactId>WAsys_pojo_http_data_entity_tool</artifactId>
-    <version>0.2.1</version>
+    <version>0.2.7</version>
     <packaging>jar</packaging>
     <description>Simple tool for making skeleton of Fillable_Object (and Poolable_Object) (WAsys_pojo_http_data) entities</description>
     <url>https://github.com/911992/WAsys_pojo_http_data_entity_tool</url>
@@ -92,6 +96,9 @@ History:
                 <version>3.2.0</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
+                    <bottom>
+                    <![CDATA[Copyright © 2020 <a href="https://github.com/911992">https://github.com/911992</a>. Licensed under The 3-Clause BSD License]]>
+                    </bottom>
                 </configuration>
                 <executions>
                     <execution>

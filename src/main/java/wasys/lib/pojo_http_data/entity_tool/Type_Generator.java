@@ -10,6 +10,14 @@ Created on: Jul 26, 2020 5:17:01 PM
     @author https://github.com/911992
  
 History:
+    0.2.7 (20200829)
+        • Generated artifact now follows the new changes related to WAsys_simple_generic_object_pool-v0.5.7 (when asking for poolable obj)
+        • Generated artifact now have static functions to get the standalone(out-of-pool) object fatory (get_standalone_obj_factory(void):Object_Factory<{USER_TYPE_NAME}> , or get_obj_factory(void):Object_Factory<{USER_TYPE_NAME}>)
+        • Generated artifact now has a static private factory variable that holds an instance of the internal pool (__factory__)
+        • Internal object-factory now is for both poolable/non-poolable generated artifact modes
+        • Moved object factory as imports for poolable artifact as essential one
+        • Updated the imports, removed import for Pool_Context, and added Generic_Object_Pool instead
+
     0.2.1 (20200823)
         • Changes related to WAsys_simple_generic_object_pool API change version 0.5.1
         • Inline Factory class now implements wasys.lib.java_type_util.reflect.type_sig.Object_Factory
@@ -33,9 +41,8 @@ public class Type_Generator {
     private static final String ACCELERATED_CACHE_INTERFACE_TYPE = "Fillable_Object_Parse_Cache_Accelerator";
 
     private static final String ESSENTIAL_IMPORTS_POOLABLE[] = {
-        "wasys.lib.java_type_util.reflect.type_sig.Object_Factory",
         "wasys.lib.generic_object_pool.Object_Pool",
-        "wasys.lib.generic_object_pool.Pool_Context"
+        "wasys.lib.generic_object_pool.Generic_Object_Pool"
     };
     private static final String ESSENTIAL_IMPORTS_POOLABLE_ALL;
 
@@ -56,7 +63,8 @@ public class Type_Generator {
 
     private static final String ESSENTIAL_IMPORTS[] = {
         String.format("wasys.lib.pojo_http_data.api_ex.%s", ACCELERATED_CACHE_INTERFACE_TYPE),
-        "wasys.lib.pojo_http_data.api.annotations.No_Param"
+        "wasys.lib.pojo_http_data.api.annotations.No_Param",
+        "wasys.lib.java_type_util.reflect.type_sig.Object_Factory"
     };
 
     private static final String ESSENTIAL_IMPORTS_ALL;
@@ -86,10 +94,15 @@ public class Type_Generator {
     private static final String OBJECT_POOL_POLICY_IMPORT = "wasys.lib.generic_object_pool.Generic_Object_Pool_Policy";
 
     private static final String POOL_VARIABLE_NAME = "__pool__";
+    
+    private static final String OBJ_FACTORY_VARIABLE_NAME = "__factory__";
 
     private static final String INTERNAL_FACTORY_CLASS_NAME = "Factory";
 
     private static final String NEW_INSTANCE_FUNC_NAME = "get_an_instance";
+    
+    private static final String POOLABLE_GET_STANDALONE_OBJ_FACTORY_FUNC_NAME = "get_standalone_obj_factory";
+    private static final String GET_STANDALONE_OBJ_FACTORY_FUNC_NAME = "get_obj_factory";
 
     private static final String GET_POOL_VAR_FUNC_NAME = "get_pool";
 
@@ -220,28 +233,30 @@ public class Type_Generator {
         _out.printf("\tprotected void child_reset_state() {\n");
         _out.print("\t\t/*TODO, reset the object state*/\n");
         _out.printf("\t}\n\n");
+        
+        /*object_factory declaration*/
+        _out.printf("\t/*object factory*/\n");
+        _out.printf("\t@No_Param final static Object_Factory<%s> %s;\n\n", arg_type_name,OBJ_FACTORY_VARIABLE_NAME);
+        
+        /*object factory initialization*/
+        _out.printf("\tstatic{\n");
+        _out.printf("\t\t%s=new %s();\n", OBJ_FACTORY_VARIABLE_NAME,INTERNAL_FACTORY_CLASS_NAME);
+        _out.printf("\t}\n\n");
 
         if (arg_as_poolable) {
-            /*pool initialization*/
+            /*pool declaration*/
             _out.printf("\t/*object pool*/\n");
-            _out.printf("\t@No_Param final static Object_Pool %s;\n", POOL_VARIABLE_NAME);
+            _out.printf("\t@No_Param final static Object_Pool<%s> %s;\n\n",arg_type_name, POOL_VARIABLE_NAME);
+            
+            /*pool initialization*/
             _out.printf("\t/*object pool initialization*/\n");
             _out.printf("\tstatic{\n");
-            _out.printf("\t\t%s = Pool_Context.get_insatcne().get_pool_unregistered_synced(new %s(),%s);\n", POOL_VARIABLE_NAME, INTERNAL_FACTORY_CLASS_NAME, arg_pool_policy);
+            _out.printf("\t\t%s = Generic_Object_Pool.new_pool_instance(%s,%s);\n", POOL_VARIABLE_NAME, OBJ_FACTORY_VARIABLE_NAME, arg_pool_policy);
             _out.printf("\t}\n\n");
 
 //            /*working variable*/
 //            _out.printf("\t/*Working variable\n\t  •true when object is being used\n\t  •false when idle and in pool context\n\t  please leave it alone*/\n");
 //            _out.printf("\t@No_Param private volatile boolean %s;\n\n", WORKING_VARIALBE_NAME);
-
-            /*factory class*/
-            _out.printf("\t/*internal factory class for the type*/\n");
-            _out.printf("\tprivate static class %s implements Object_Factory<%s>{\n\n", INTERNAL_FACTORY_CLASS_NAME,arg_type_name);
-            _out.printf("\t\t@Override\n");
-            _out.printf("\t\tpublic %s create_object(Class arg_type) {\n",arg_type_name);
-            _out.printf("\t\t\treturn new %s();\n", arg_type_name);
-            _out.printf("\t\t}\n\n");
-            _out.printf("\t}\n\n");
 
             /*static method for getting a new instnace*/
             _out.printf("\t/*Returns a pooled instance from the pool*/\n");
@@ -254,6 +269,11 @@ public class Type_Generator {
             /*private constructor*/
             _out.printf("\tprivate %s(){\n\t\t/*User-defined instance initialization(if any)*/\n\t}\n\n", arg_type_name);
 
+            /*getter for pool*/
+            _out.printf("\t/*method to return %s*/\n",POOL_VARIABLE_NAME);
+            _out.printf("\tpublic static Object_Pool<%s> %s(){\n",arg_type_name, GET_POOL_VAR_FUNC_NAME);
+            _out.printf("\t\treturn %s;\n\t}\n\n", POOL_VARIABLE_NAME);
+            
 //            /*getter for valdiation*/
 //            _out.printf("\t/*(internal use)method to check if instance is valid or not*/\n");
 //            _out.printf("\tprivate boolean %s(){\n", WORKING_VARIALBE_GETTER_FUNC_NAME);
@@ -269,7 +289,19 @@ public class Type_Generator {
             _out.printf("\tpublic %s(){\n\t\t/*User-defined instance initialization(if any)*/\n\t}\n\n", arg_type_name);
         }
 
+        /*factory class*/
+        _out.printf("\t/*internal factory class for the type*/\n");
+        _out.printf("\tprivate static class %s implements Object_Factory<%s>{\n\n", INTERNAL_FACTORY_CLASS_NAME,arg_type_name);
+        _out.printf("\t\t@Override\n");
+        _out.printf("\t\tpublic %s create_object(Class arg_type) {\n",arg_type_name);
+        _out.printf("\t\t\treturn new %s();\n", arg_type_name);
+        _out.printf("\t\t}\n\n");
+        _out.printf("\t}\n\n");
         
+        /*standalone object factory*/
+        _out.printf("\t/*method to return out-of-pool(standalone) object factory\n\tNOTE: generated object SHOULD NOT be released back to the pool*/\n");
+        _out.printf("\tpublic static Object_Factory<%s> %s(){\n",arg_type_name,(arg_as_poolable)?POOLABLE_GET_STANDALONE_OBJ_FACTORY_FUNC_NAME:GET_STANDALONE_OBJ_FACTORY_FUNC_NAME);
+        _out.printf("\t\treturn %s;\n\t}\n\n", OBJ_FACTORY_VARIABLE_NAME);
 
         /*accelerated interface methods*/
         _out.printf("\t/*Type-level global cache ,DO NO CHANGE/TOUCH*/\n");

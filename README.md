@@ -7,7 +7,7 @@ Simple tool for making skeleton of `Fillable_Object` [WAsys_simple_generic_objec
 *diagram 0: social media vector*
 
 ## Revision History
-Latest: v0.2.1 (Aug 23, 2020)  
+Latest: v0.2.7 (Aug 29, 2020)  
 Please refer to [release_note.md](./release_note.md) file  
 
 ## Requirments
@@ -33,7 +33,7 @@ By default it shows the help(`-h`) command, something like following.
 ```
 $ java -jar ./dist/WAsys_pojo_http_data_entity_tool.jar
 Error! zero-length input argument is not expected!
-WAsys Fillable_Object Skeleton Generator v0.2.1(20200823)
+WAsys Fillable_Object Skeleton Generator v0.2.7(20200829)
 https://github.com/911992/WAsys_pojo_http_data_entity_tool
 -----------
 Command Lines:
@@ -86,9 +86,11 @@ For running the graphical interface, run the artifact using `-fancy` command. It
 Tool could produce only `Fillable_Object`, or `Fillable_Object` + `Poolable_Object` where being pooled is considered also.
 
 ### `Fillable_Object` Only Entity
-`Fillable_Object` only entities are extended `Fillable_Object_Adapter`, and implemented `Fillable_Object_Parse_Cache_Accelerator` (for fast cache access).
+`Fillable_Object`-*only* entities are extended `Fillable_Object_Adapter`, and implemented `Fillable_Object_Parse_Cache_Accelerator` (for fast cache access).
 
-Type will have a default public constructor(unlike the pooled mode), and no any factory calss.
+Type will have a default public constructor(unlike the pooled mode). Since update `0.2.7`, generated class will have a static inner `Factory` class that works as factory for teh type.
+
+`Factory` class could be accessible by `get_obj_factory(void):Object_Factory` `static` method.
 
 Considering the class diagram of generated type for `Fillable_Object` **only** artifact.
 
@@ -98,9 +100,15 @@ Considering the class diagram of generated type for `Fillable_Object` **only** a
 ### `Fillable_Object` And `Poolable_Object` Entity
 `Fillable_Object` and `Poolable_Object` artifacts are extended from `Poolable_Fillable_Object_Adapter` which is a adapter implements both `Fillable_Object`, and `Poolable_Object` interfaces.
 
+Like non-poolable entity mode, a `Fillable_Object` and `Poolable_Object` generated type also implements `Fillable_Object_Parse_Cache_Accelerator`.
+
 Type will have a dedicated instansion mechanism(like [`WAsys_poolable_entity_tool`](https://github.com/911992/WAsys_Poolable_Object_generator_tool)) by marking the default constructor `private`, and a embdedded(inline) `Object_Factory` class. It follows the rest generation policy of `Fillable_Object` *Only* mode.
 
 Considering the class diagram of generated type for `Fillable_Object` and `Poolable_Object`
+
+Since version `0.2.7`, the underlying `__factory__:Object_Factory` instance could be accessed using `get_standalone_obj_factory():Object_Factory` method, that would instance of the entity *out of* pool context.
+
+Same the `get_pool():Object_Pool` returns the underlying `__pool__:Object_Pool` instance.
 
 ![`Filalble_Object` and `Poolable_Object` generated class/artifact class diagram](./_docs/_diagrams/fillable_poolable_gen_artifact_class_diagram_partial.svg)  
 *diagram 2: [`Filalble_Object` and `Poolable_Object` generated class/artifact class diagram](./_docs/_diagrams/filalble_poolable_gen_artifact_class_diagram.svg)*
